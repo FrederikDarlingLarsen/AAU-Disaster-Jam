@@ -14,30 +14,27 @@ public class BodyPartScript : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other){
 
+        if(other.gameObject.CompareTag("Slot")){
 
-        if(collected && other.gameObject.CompareTag("Slot")){
+           if(other.gameObject.GetComponent<SlotScript>().name.ToString().Equals(name.ToString())){
 
-              if(other.gameObject.GetComponent<SlotScript>().name.Equals(name)){
-            Debug.Log("correct slot!!!");
+              Debug.Log("correct slot!!!");
 
-        gameObject.transform.parent = other.gameObject.transform;
+              stats.DisplayMessage("yay", 2);
+              
+              gameObject.transform.parent = other.gameObject.transform;
+              
+              gameObject.transform.position = other.gameObject.transform.position;
+              gameObject.transform.rotation = Quaternion.identity;
+              
+              GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(false);
 
-        gameObject.transform.position = other.gameObject.transform.position;
-
-    }else{
-        Debug.Log("error");
+             }
     }
-    }
-        
-
-    //      if(other.gameObject.CompareTag("PickupBox") && collected){
-    //         GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(false);
-    //         gameObject.GetComponent<Rigidbody>().isKinematic=false;
-    //         collected = false;
-    // }
 
         if(other.gameObject.CompareTag("PickupBox") && !collected){
-Debug.Log("hey");
+
+            Debug.Log("hey");
 
             gameObject.transform.parent = other.gameObject.transform;
 
@@ -45,15 +42,15 @@ Debug.Log("hey");
 
             gameObject.transform.localPosition = new Vector3 (0.0f, 0.5f, 0.0f);
 
-         stats.bodyPartCollected(name.ToString());
+            stats.bodyPartCollected(name.ToString());
 
-         collected = true;
+            collected = true;
 
-         GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(true);
+            GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(true);
 
-         stats.DisplayMessage(name.ToString() + " was picked up!", 1.5f);
+            stats.DisplayMessage(name.ToString() + " was picked up!", 1.5f);
          
-         Debug.Log("item was collected: " + name.ToString());
+            Debug.Log("item was collected: " + name.ToString());
         }
 
        

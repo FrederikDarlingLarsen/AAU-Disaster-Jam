@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PickupBox
   - Slot
+  - TriggerBox
   layers:
   - Default
   - TransparentFX

@@ -16,24 +16,15 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
-        float verticalInput = Input.GetAxis("Horizontal");
+       transform.eulerAngles += new Vector3(0,horizontalInput*100,0);
+    
 
-        Vector3 moveDirection = new Vector3(verticalInput, 0, horizontalInput);
+   
 
-        if (moveDirection.sqrMagnitude > 0.001f)
-    {
-        var desiredRotation = Quaternion.LookRotation(moveDirection);
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, Time.deltaTime * 10);
-    }
-
-    var direction = new Vector3(horizontalInput, 0, -verticalInput);
-
-    direction.Normalize();
-
-    transform.position += direction*speed*Time.deltaTime;
+    transform.localPosition += new Vector3(verticalInput,0,0)*speed*Time.deltaTime;
     
         if((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Keypad0)) && !holdingItem){
             playerAnim.Play("pick up");
