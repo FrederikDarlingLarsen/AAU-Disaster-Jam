@@ -6,8 +6,13 @@ public class PlayerScript : MonoBehaviour
 {
     private Animator playerAnim;
     public float speed;
+    private bool holdingItem;
 
-   private bool holdingItem;
+    public GameObject followTransform;
+
+    public Vector2 _look;
+
+    public float rotationPower = 3f;
 
     void Start()
     {
@@ -16,20 +21,66 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        #region Player Based Rotation
+        
+        //Move the player based on the X input on the controller
+        transform.rotation *= Quaternion.AngleAxis(_look.x * rotationPower, Vector3.up);
 
-       transform.eulerAngles += new Vector3(0,horizontalInput*100,0);
+        #endregion
+
+        #region Follow Transform Rotation
+
+        //Rotate the Follow Target transform based on the input
+        followTransform.transform.rotation *= Quaternion.AngleAxis(_look.x * rotationPower, Vector3.up);
+
+        #endregion
+
+        #region Vertical Rotation
+        followTransform.transform.rotation *= Quaternion.AngleAxis(_look.y * rotationPower, Vector3.forward);
+
+        var angles = followTransform.transform.localEulerAngles;
+        angles.z = 0;
+
+        var angle = followTransform.transform.localEulerAngles.x;
+
+        //Clamp the Up/Down rotation
+        if (angle > 180 && angle < 340)
+        {
+            angles.x = 340;
+        }
+        else if(angle < 180 && angle > 40)
+        {
+            angles.x = 40;
+        }
+
+
+        followTransform.transform.localEulerAngles = angles;
+        #endregion
+
+
+
+
+       float horizontalInput = Input.GetAxis("Horizontal");
+
+       float verticalInput = Input.GetAxis("Vertical");
+
+       transform.eulerAngles += new Vector3(0,horizontalInput*100,0)*Time.deltaTime;
     
-
-   
-
-    transform.localPosition += new Vector3(verticalInput,0,0)*speed*Time.deltaTime;
+       transform.position += transform.right * verticalInput*speed*Time.deltaTime;
     
         if((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Keypad0)) && !holdingItem){
             playerAnim.Play("pick up");
             GameObject.Find("RobotPickupTrigger").GetComponent<BoxCollider>().enabled=true;
         }
+
+
+
+
+
+         //Set the player rotation based on the look transform
+      //  transform.rotation = Quaternion.Euler(0, followTransform.transform.rotation.eulerAngles.y, 0);
+        //reset the y rotation of the look transform
+       // followTransform.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
     }
 
     public void OnPickupAnimEnd(){
