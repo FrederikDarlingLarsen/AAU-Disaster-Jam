@@ -40,7 +40,8 @@ public class BodyPartScript : MonoBehaviour
 
             gameObject.GetComponent<Rigidbody>().isKinematic=true;
 
-            gameObject.transform.localPosition = new Vector3 (0.0f, 0.5f, 0.0f);
+            gameObject.transform.localPosition = new Vector3 (0.0f, 0.3f, 0.0f);
+            gameObject.transform.rotation = Quaternion.identity;
 
             stats.bodyPartCollected(name.ToString());
 
