@@ -18,27 +18,25 @@ public class BodyPartScript : MonoBehaviour
 
            if(other.gameObject.GetComponent<SlotScript>().name.ToString().Equals(name.ToString())){
 
-              Debug.Log("correct slot!!!");
-
-              stats.DisplayMessage("yay", 2);
+          
               
               gameObject.transform.parent = other.gameObject.transform;
               
               gameObject.transform.position = other.gameObject.transform.position;
               gameObject.transform.rotation = Quaternion.identity;
-              
               GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(false);
 
              }
     }
-
         if(other.gameObject.CompareTag("PickupBox") && !collected){
 
-            Debug.Log("hey");
+        
 
             gameObject.transform.parent = other.gameObject.transform;
 
             gameObject.GetComponent<Rigidbody>().isKinematic=true;
+
+            Physics.IgnoreCollision(other.gameObject.GetComponent<Collider>(), GameObject.Find("RobotPickupTrigger").GetComponent<Collider>(), true);
 
             gameObject.transform.localPosition = new Vector3 (0.0f, 0.3f, 0.0f);
             gameObject.transform.rotation = Quaternion.identity;
@@ -49,7 +47,7 @@ public class BodyPartScript : MonoBehaviour
 
             GameObject.Find("Player").GetComponent<PlayerScript>().setHolding(true);
 
-            stats.DisplayMessage(name.ToString() + " was picked up!", 1.5f);
+           // stats.DisplayMessage(name.ToString() + " was picked up!", 1.5f);
          
             Debug.Log("item was collected: " + name.ToString());
         }

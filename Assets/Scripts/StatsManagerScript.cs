@@ -16,11 +16,22 @@ public class StatsManagerScript : MonoBehaviour
 
     private Renderer healthRenderer;
 
-    private bool allPartsCollected = false;
+    public bool allPartsCollected = false;
 
     private GameObject brainSpot;
 
     private PlayerScript player;
+    public GameObject mainCam;
+
+    public GameObject otherCam;
+
+    public GameObject fadeIn;
+
+    public GameObject fadeToBlack;
+
+    public GameObject nathan;
+
+    bool done = false;
 
     void Start()
     {
@@ -41,6 +52,9 @@ public class StatsManagerScript : MonoBehaviour
      brainSpot = GameObject.Find("Brain Spot");
 
      player = GameObject.Find("Player").GetComponent<PlayerScript>();
+
+
+     //StartCoroutine(EndCutscene());
 
      
     }
@@ -69,8 +83,11 @@ public class StatsManagerScript : MonoBehaviour
       }
 
 
-      if(allPartsCollected && !player.getHolding()){
+      if(allPartsCollected && !player.getHolding() && !done){
         brainSpot.GetComponent<Renderer>().enabled=true;
+        brainSpot.GetComponent<Collider>().enabled=true;
+        DisplayMessage("You can now insert the brain!", 1.5f);
+        done=true;
       }
     }
 
@@ -107,5 +124,32 @@ public class StatsManagerScript : MonoBehaviour
     }
     public void HideMessage(){
         UIMessage.SetActive(false);
+    }
+
+    public IEnumerator EndCutscene(){
+
+        fadeToBlack.SetActive(true);
+
+        yield return new WaitForSeconds(1);
+
+        fadeToBlack.SetActive(false);
+
+        mainCam.SetActive(false);
+
+        otherCam.SetActive(true);
+
+        fadeIn.SetActive(true);
+
+        nathan.SetActive(true);
+
+        GameObject.Find("Elevator").GetComponent<Animator>().Play("elevator");
+
+        yield return new WaitForSeconds(3);
+
+        GameObject.Find("Elevator").GetComponent<Animator>().Play("elevatorR");
+
+        yield return new WaitForSeconds(2);
+
+        fadeToBlack.SetActive(true);
     }
 }
